@@ -1,0 +1,21 @@
+.author-style{
+    color:red;
+    font-size: 15px;
+}
+
+.carousel-inner {
+    height: 300px;
+}
+body {
+    background-color: #ededed!important;
+}
+.carousel-item {
+    padding: 20px;
+}
+.carousel-indicators {
+    background-color: #ce2127;
+}
+.card {
+    padding: 20px;
+    border: 0px;
+}
