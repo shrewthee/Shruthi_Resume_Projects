@@ -1,0 +1,38 @@
+.logo-size {
+    width: 50px;
+}
+
+.bg-light {
+    background-color: #808080 !important;
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+/* .col {
+background-color: white;
+} */
+.col-background {
+    background-color: #ffffff;
+}
+.bg-light {
+    background-color: #ce2127 !important;
+}
+
+/* 
+nav {
+    height: 50px;
+}
+    */
+.navbar .nav-link {
+    color:#ffffff;
+}
+.navbar .nav-link.active {
+    color:#ffffff !important;
+} 
+
+.image-size {
+    padding-top: 10px;
+    height: 100px;
+}
