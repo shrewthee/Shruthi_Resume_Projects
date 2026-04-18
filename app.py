@@ -3,50 +3,41 @@ import requests
 
 app = Flask(__name__)
 
-#api = The MealDB API: pulling recipe information
-
-MEALDB_BASE = "https://www.themealdb.com/api/json/v1/1"
+API_KEY = "b3b37615c1d6dcc42ed38d41"  # Free key from exchangerate-api.com
+BASE_URL = "https://v6.exchangerate-api.com/v6"
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/api/random")
-def random_meal():
-    res = requests.get(f"{MEALDB_BASE}/random.php")
+@app.route("/api/currencies")
+def get_currencies():
+    res = requests.get(f"{BASE_URL}/{API_KEY}/codes")
     data = res.json()
-    return jsonify(format_meal(data["meals"][0]))
+    if data["result"] != "success":
+        return jsonify({"error": "Could not fetch currencies"}), 500
+    return jsonify(data["supported_codes"])
 
-@app.route("/api/search")
-def search_by_ingredient():
-    ingredient = request.args.get("ingredient", "")
-    res = requests.get(f"{MEALDB_BASE}/filter.php?i={ingredient}")
+@app.route("/api/convert")
+def convert():
+    from_currency = request.args.get("from", "USD")
+    to_currency = request.args.get("to", "EUR")
+    amount = request.args.get("amount", 1, type=float)
+
+    res = requests.get(f"{BASE_URL}/{API_KEY}/pair/{from_currency}/{to_currency}/{amount}")
     data = res.json()
-    if not data["meals"]:
-        return jsonify({"error": "No meals found"}), 404
-    # Pick a random one from results
-    import random
-    meal_stub = random.choice(data["meals"])
-    detail = requests.get(f"{MEALDB_BASE}/lookup.php?i={meal_stub['idMeal']}")
-    meal = detail.json()["meals"][0]
-    return jsonify(format_meal(meal))
 
-def format_meal(meal):
-    ingredients = []
-    for i in range(1, 21):
-        ing = meal.get(f"strIngredient{i}", "").strip()
-        measure = meal.get(f"strMeasure{i}", "").strip()
-        if ing:
-            ingredients.append(f"{measure} {ing}".strip())
-    return {
-        "name": meal["strMeal"],
-        "category": meal["strCategory"],
-        "area": meal["strArea"],
-        "instructions": meal["strInstructions"],
-        "image": meal["strMealThumb"],
-        "youtube": meal.get("strYoutube", ""),
-        "ingredients": ingredients
-    }
+    if data["result"] != "success":
+        return jsonify({"error": "Conversion failed"}), 500
+
+    return jsonify({
+        "from": from_currency,
+        "to": to_currency,
+        "amount": amount,
+        "result": round(data["conversion_result"], 2),
+        "rate": round(data["conversion_rate"], 4),
+        "last_updated": data["time_last_update_utc"]
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
