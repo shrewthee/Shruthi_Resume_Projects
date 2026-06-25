@@ -1,0 +1,21 @@
+{
+  "7801877260": {
+    "owner_name": "Shruthi Selvakumar",
+    "account_number": "7801877260",
+    "balance": 500.0,
+    "pin_hash": "ff78619b764fd6855a1886232be7cc105c8cba9c0d38f2b4c4a3561c86691e45",
+    "pin_salt": "95bbb7ba833e8ad0b74aed0c5c466a22",
+    "transactions": [
+      {
+        "type": "DEPOSIT",
+        "amount": 500.0,
+        "balance_after": 500.0,
+        "description": "Initial deposit",
+        "timestamp": "2026-06-24T16:33:25"
+      }
+    ],
+    "failed_attempts": 0,
+    "locked": false,
+    "account_type": "SavingsAccount"
+  }
+}
